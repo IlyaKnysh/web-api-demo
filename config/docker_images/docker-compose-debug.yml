@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  hub:
+    image: elgalu/selenium
+    ports:
+      - 4444:4444
+    volumes:
+      - /dev/shm:/dev/shm
+    privileged: true
+    environment:
+      - SELENIUM_HUB_HOST=hub
+      - SELENIUM_HUB_PORT=4444
+      - GRID=true
+      - CHROME=false
+      - FIREFOX=false
+
+  chrome:
+    image: elgalu/selenium
+    depends_on:
+      - hub
+    ports:
+      - 5900:25900
+      - 6080:26080
+    volumes:
+      - /dev/shm:/dev/shm
+    privileged: true
+    environment:
+      - NOVNC=true
+      - SELENIUM_HUB_HOST=hub
+      - SELENIUM_HUB_PORT=4444
+      - SELENIUM_NODE_HOST={{CONTAINER_IP}}
+      - SCREEN_WIDTH=1920
+      - SCREEN_HEIGHT=1200
+      - VIDEO=false
+      - GRID=false
+      - CHROME=true
+      - FIREFOX=false
